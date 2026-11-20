@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 64" width="340" height="64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#39ff88"/><stop offset="1" stop-color="#14c46a"/></linearGradient>
+  </defs>
+  <path d="M32 3 56 12v18c0 15-10 26-24 31C18 56 8 45 8 30V12z" fill="#07120c" stroke="url(#g)" stroke-width="3"/>
+  <path d="M14 22h36" stroke="#1d3a2a" stroke-width="1.5"/>
+  <path d="M18 19v6M26 19v6M38 19v6M46 19v6" stroke="#39ff88" stroke-width="2" stroke-linecap="round"/>
+  <path d="M25 30h15M25 30v20M25 39h10" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <circle cx="42" cy="30" r="2.6" fill="#c6ff3d"/><circle cx="37" cy="39" r="2.6" fill="#c6ff3d"/>
+  <path d="M44 40l-4 7h4l-3 7 8-10h-4l3-4z" fill="#c6ff3d"/>
+  <text x="70" y="36" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" font-weight="800" fill="#e6f4ec">Franken<tspan fill="#39ff88">Technogies</tspan></text>
+  <text x="71" y="54" font-family="JetBrains Mono,Consolas,monospace" font-size="10" letter-spacing="3" fill="#93ab9e">CYBER DEFENSE</text>
+</svg>

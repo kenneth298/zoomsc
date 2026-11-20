@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrankenTechnogies | Cybersecurity That Never Sleeps</title>
+<meta name="description" content="FrankenTechnogies is a cybersecurity firm providing penetration testing, 24/7 threat monitoring, incident response, cloud security and compliance services.">
+<meta name="theme-color" content="#07120c">
+<meta property="og:title" content="FrankenTechnogies | Cybersecurity That Never Sleeps">
+<meta property="og:description" content="Penetration testing, 24/7 managed detection & response, incident response, cloud security and compliance.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://frankentechnogies.com/">
+<!-- Favicon: same shield mark as the logo, embedded so no extra file is needed -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 3 56 12v18c0 15-10 26-24 31C18 56 8 45 8 30V12z' fill='%2307120c' stroke='%2339ff88' stroke-width='4'/%3E%3Cpath d='M24 18h18M24 18v28M24 31h13' stroke='%2339ff88' stroke-width='6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060d09;
+    --bg-2:#0b1711;
+    --panel:#0f1f17;
+    --line:#1d3a2a;
+    --text:#e6f4ec;
+    --muted:#93ab9e;
+    --brand:#39ff88;
+    --brand-2:#14c46a;
+    --bolt:#c6ff3d;
+    --danger:#ff5d5d;
+    --radius:14px;
+    --max:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+
+  /* Background grid */
+  .grid-bg{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(57,255,136,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(57,255,136,.05) 1px,transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(ellipse at 50% 0%,#000 30%,transparent 75%);
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(6,13,9,.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+  .logo svg{width:40px;height:40px;transition:transform .4s ease}
+  .logo:hover svg{transform:rotate(-8deg) scale(1.06)}
+  .logo:hover .logo-bolt{animation:zap .5s ease}
+  .wordmark{font-weight:800;font-size:1.15rem;letter-spacing:.2px;line-height:1}
+  .wordmark span{color:var(--brand)}
+  .wordmark small{display:block;font-family:"JetBrains Mono",monospace;font-weight:400;font-size:.62rem;color:var(--muted);letter-spacing:2.4px;margin-top:4px;text-transform:uppercase}
+  @keyframes zap{0%,100%{opacity:1}25%{opacity:.2}50%{opacity:1}75%{opacity:.4}}
+
+  .links{display:flex;gap:28px;align-items:center}
+  .links a{font-size:.93rem;color:var(--muted);transition:color .2s}
+  .links a:hover,.links a.active{color:var(--text)}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 22px;border-radius:10px;font-weight:600;font-size:.95rem;
+    border:1px solid transparent;cursor:pointer;transition:all .2s;
+  }
+  .btn-primary{background:var(--brand);color:#04120a}
+  .btn-primary:hover{background:var(--bolt);box-shadow:0 0 24px rgba(57,255,136,.45)}
+  .btn-ghost{border-color:var(--line);color:var(--text);background:transparent}
+  .btn-ghost:hover{border-color:var(--brand);color:var(--brand)}
+  .links .btn{padding:9px 18px;color:#04120a}
+  .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:8px;width:42px;height:42px;color:var(--text);cursor:pointer}
+  .menu-btn svg{margin:auto}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:96px 0 80px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+  .tag{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:"JetBrains Mono",monospace;font-size:.78rem;
+    color:var(--brand);border:1px solid var(--line);background:var(--bg-2);
+    padding:6px 12px;border-radius:999px;margin-bottom:22px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--brand);box-shadow:0 0 10px var(--brand);animation:pulse 1.8s infinite}
+  @keyframes pulse{50%{opacity:.35}}
+  h1{font-size:clamp(2.3rem,5.2vw,3.9rem);line-height:1.08;font-weight:800;letter-spacing:-1.2px;margin-bottom:22px}
+  h1 em{font-style:normal;color:var(--brand);text-shadow:0 0 28px rgba(57,255,136,.35)}
+  .lead{font-size:1.12rem;color:var(--muted);max-width:560px;margin-bottom:32px}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap}
+  .trust{display:flex;gap:26px;flex-wrap:wrap;margin-top:40px;color:var(--muted);font-size:.85rem}
+  .trust div{display:flex;align-items:center;gap:8px}
+  .trust svg{color:var(--brand)}
+
+  /* Terminal */
+  .terminal{
+    background:#040906;border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(57,255,136,.06) inset;
+    overflow:hidden;
+  }
+  .term-bar{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+  .term-bar i{width:11px;height:11px;border-radius:50%;background:#2a3d32}
+  .term-bar i:nth-child(1){background:#ff5f57}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+  .term-bar span{margin-left:10px;font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--muted)}
+  .term-body{padding:18px 18px 22px;font-family:"JetBrains Mono",monospace;font-size:.82rem;min-height:300px;color:#b9d8c6}
+  .term-body .ok{color:var(--brand)}
+  .term-body .warn{color:#febc2e}
+  .term-body .bad{color:var(--danger)}
+  .term-body .p{color:var(--bolt)}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--brand);vertical-align:middle;animation:pulse 1s steps(1) infinite}
+
+  /* ---------- Sections ---------- */
+  section{padding:90px 0}
+  .section-head{max-width:680px;margin-bottom:52px}
+  .eyebrow{font-family:"JetBrains Mono",monospace;color:var(--brand);font-size:.8rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h2{font-size:clamp(1.8rem,3.6vw,2.6rem);line-height:1.15;letter-spacing:-.6px;margin-bottom:14px}
+  .section-head p{color:var(--muted);font-size:1.05rem}
+
+  /* Stats */
+  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2);padding:44px 0}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+  .stat b{display:block;font-size:2.4rem;font-weight:800;color:var(--brand);line-height:1.1}
+  .stat span{color:var(--muted);font-size:.9rem}
+
+  /* Services */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden;
+  }
+  .card:hover{transform:translateY(-4px);border-color:var(--brand-2);box-shadow:0 14px 40px rgba(20,196,106,.12)}
+  .card .ico{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:rgba(57,255,136,.09);color:var(--brand);margin-bottom:18px}
+  .card h3{font-size:1.15rem;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.95rem}
+  .card ul{list-style:none;margin-top:14px;display:grid;gap:6px}
+  .card li{font-size:.86rem;color:#b9d0c3;padding-left:18px;position:relative}
+  .card li::before{content:"";position:absolute;left:0;top:.6em;width:8px;height:2px;background:var(--brand)}
+
+  /* Process */
+  .process{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:s}
+  .step{padding:26px;border:1px dashed var(--line);border-radius:var(--radius);background:var(--bg)}
+  .step::before{counter-increment:s;content:"0" counter(s);font-family:"JetBrains Mono",monospace;color:var(--brand);font-size:.9rem;display:block;margin-bottom:12px}
+  .step h3{font-size:1.08rem;margin-bottom:6px}
+  .step p{color:var(--muted);font-size:.92rem}
+
+  /* Why */
+  .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .checks{display:grid;gap:18px}
+  .check{display:flex;gap:14px}
+  .check svg{flex:none;color:var(--brand);margin-top:3px}
+  .check h4{font-size:1.02rem;margin-bottom:2px}
+  .check p{color:var(--muted);font-size:.93rem}
+  .shield-panel{
+    border:1px solid var(--line);border-radius:20px;background:radial-gradient(circle at 50% 40%,rgba(57,255,136,.14),transparent 65%),var(--panel);
+    aspect-ratio:1/1;display:grid;place-items:center;position:relative;overflow:hidden;
+  }
+  .shield-panel svg.big{width:56%;height:auto;filter:drop-shadow(0 0 30px rgba(57,255,136,.35))}
+  .ring{position:absolute;border:1px solid rgba(57,255,136,.18);border-radius:50%;animation:ring 4s linear infinite}
+  @keyframes ring{0%{width:20%;height:20%;opacity:1}100%{width:120%;height:120%;opacity:0}}
+  .ring:nth-child(2){animation-delay:1.3s}.ring:nth-child(3){animation-delay:2.6s}
+
+  /* CTA band */
+  .band{
+    border:1px solid var(--brand-2);border-radius:20px;padding:48px;
+    background:linear-gradient(135deg,rgba(57,255,136,.12),rgba(198,255,61,.05));
+    display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;
+  }
+  .band h2{margin-bottom:6px}
+  .band p{color:var(--muted)}
+  .band .btn-danger{background:var(--danger);color:#1a0505}
+  .band .btn-danger:hover{box-shadow:0 0 24px rgba(255,93,93,.5)}
+
+  /* Contact */
+  .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px}
+  .info{display:grid;gap:18px;align-content:start}
+  .info-item{display:flex;gap:14px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  .info-item svg{color:var(--brand);flex:none}
+  .info-item b{display:block;font-size:.95rem}
+  .info-item span{color:var(--muted);font-size:.9rem}
+  form{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:30px;display:grid;gap:16px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  label{font-size:.85rem;color:var(--muted);display:block;margin-bottom:6px}
+  input,select,textarea{
+    width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--text);font:inherit;font-size:.95rem;transition:border-color .2s,box-shadow .2s;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(57,255,136,.15)}
+  textarea{min-height:130px;resize:vertical}
+  .err{color:var(--danger);font-size:.78rem;margin-top:4px;display:none}
+  .invalid .err{display:block}
+  .invalid input,.invalid textarea,.invalid select{border-color:var(--danger)}
+  .form-msg{display:none;padding:14px;border-radius:10px;font-size:.92rem}
+  .form-msg.show{display:block}
+  .form-msg.success{background:rgba(57,255,136,.1);border:1px solid var(--brand-2);color:var(--brand)}
+  .hp{position:absolute;left:-9999px}
+
+  /* Footer */
+  footer{border-top:1px solid var(--line);padding:48px 0 28px;margin-top:40px;background:var(--bg-2)}
+  .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px;margin-bottom:34px}
+  .foot h5{font-size:.9rem;margin-bottom:12px}
+  .foot a{display:block;color:var(--muted);font-size:.9rem;margin-bottom:8px}
+  .foot a:hover{color:var(--brand)}
+  .foot p{color:var(--muted);font-size:.9rem;margin-top:14px;max-width:300px}
+  .copy{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;color:var(--muted);font-size:.82rem}
+
+  /* Back to top */
+  #toTop{position:fixed;right:20px;bottom:20px;width:46px;height:46px;border-radius:12px;background:var(--panel);border:1px solid var(--line);color:var(--brand);display:grid;place-items:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s}
+  #toTop.show{opacity:1;pointer-events:auto}
+
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:980px){
+    .hero-grid,.why-grid,.contact-grid{grid-template-columns:1fr}
+    .cards{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:1fr 1fr}
+    .foot{grid-template-columns:1fr 1fr}
+    .shield-panel{max-width:420px;margin:0 auto;width:100%}
+  }
+  @media (max-width:760px){
+    .menu-btn{display:grid}
+    .links{
+      position:absolute;top:70px;left:0;right:0;flex-direction:column;gap:0;
+      background:var(--bg);border-bottom:1px solid var(--line);
+      max-height:0;overflow:hidden;transition:max-height .3s ease;
+    }
+    .links.open{max-height:420px}
+    .links a{padding:14px 20px;width:100%;border-top:1px solid var(--line)}
+    .links .btn{margin:14px 20px;width:calc(100% - 40px);justify-content:center}
+    .cards,.steps,.row{grid-template-columns:1fr}
+    .stats-grid{grid-template-columns:1fr 1fr}
+    .hero{padding:60px 0}
+    section{padding:64px 0}
+    .band{padding:30px}
+    .foot{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+
+<!-- Reusable logo symbol: referenced by header, hero panel and footer -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="ftGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#39ff88"/>
+      <stop offset="1" stop-color="#14c46a"/>
+    </linearGradient>
+    <symbol id="ft-logo" viewBox="0 0 64 64">
+      <!-- Shield -->
+      <path d="M32 3 56 12v18c0 15-10 26-24 31C18 56 8 45 8 30V12z" fill="#07120c" stroke="url(#ftGrad)" stroke-width="3"/>
+      <!-- Stitches across the shield (the "Franken" seam) -->
+      <path d="M14 22h36" stroke="#1d3a2a" stroke-width="1.5"/>
+      <g stroke="#39ff88" stroke-width="2" stroke-linecap="round">
+        <path d="M18 19v6M26 19v6M38 19v6M46 19v6"/>
+      </g>
+      <!-- Circuit "F" -->
+      <path d="M25 30h15M25 30v20M25 39h10" stroke="url(#ftGrad)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <circle cx="42" cy="30" r="2.6" fill="#c6ff3d"/>
+      <circle cx="37" cy="39" r="2.6" fill="#c6ff3d"/>
+      <!-- Bolt -->
+      <path class="logo-bolt" d="M44 40l-4 7h4l-3 7 8-10h-4l3-4z" fill="#c6ff3d"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header>
+  <nav class="wrap nav" aria-label="Main">
+    <a href="#top" class="logo" aria-label="FrankenTechnogies home">
+      <svg viewBox="0 0 64 64" role="img" aria-label="FrankenTechnogies logo"><use href="#ft-logo"/></svg>
+      <div class="wordmark">Franken<span>Technogies</span><small>Cyber Defense</small></div>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <div class="links" id="navLinks">
+      <a href="#services">Services</a>
+      <a href="#process">Approach</a>
+      <a href="#why">Why Us</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="btn btn-primary">Free Assessment</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="reveal">
+        <div class="tag"><span class="dot"></span> SOC online &middot; monitoring 24/7/365</div>
+        <h1>We stitch together <em>defenses</em> that bring attackers to a dead stop.</h1>
+        <p class="lead">FrankenTechnogies protects businesses with offensive testing, round-the-clock threat detection and rapid incident response, built for how attackers actually operate.</p>
+        <div class="cta-row">
+          <a href="#contact" class="btn btn-primary">
+            Get a Free Security Assessment
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#services" class="btn btn-ghost">Explore Services</a>
+        </div>
+        <div class="trust">
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Certified ethical hackers</div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> SOC 2 / ISO 27001 readiness</div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> 15-min critical response</div>
+        </div>
+      </div>
+
+      <div class="terminal reveal" aria-label="Simulated threat monitoring console">
+        <div class="term-bar"><i></i><i></i><i></i><span>ft-soc ~ threat-monitor</span></div>
+        <div class="term-body" id="term"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="wrap stats-grid">
+      <div class="stat reveal"><b data-count="24" data-suffix="/7">0</b><span>Security Operations</span></div>
+      <div class="stat reveal"><b data-count="15" data-suffix=" min">0</b><span>Critical Response Target</span></div>
+      <div class="stat reveal"><b data-count="99.9" data-suffix="%" data-dec="1">0</b><span>Monitoring Uptime</span></div>
+      <div class="stat reveal"><b data-count="360" data-suffix="&deg;">0</b><span>Attack Surface Coverage</span></div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">// What we do</div>
+        <h2>Full-spectrum cybersecurity services</h2>
+        <p>From finding your weaknesses before criminals do, to containing a live breach, we cover every layer of your environment.</p>
+      </div>
+      <div class="cards">
+        <article class="card reveal">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg></div>
+          <h3>Penetration Testing</h3>
+          <p>Real-world attack simulations against your apps, networks and people.</p>
+          <ul><li>Web, API &amp; mobile apps</li><li>Internal &amp; external networks</li><li>Red team engagements</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></div>
+          <h3>Managed Detection &amp; Response</h3>
+          <p>24/7 SOC analysts watching, hunting and responding to threats in real time.</p>
+          <ul><li>SIEM &amp; EDR management</li><li>Proactive threat hunting</li><li>Monthly threat reports</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></div>
+          <h3>Incident Response</h3>
+          <p>Rapid containment, forensics and recovery when the worst happens.</p>
+          <ul><li>Ransomware recovery</li><li>Digital forensics</li><li>Retainer plans available</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4 12a4 4 0 0 0 1 7.9z"/><path d="M12 12v4M10 14h4"/></svg></div>
+          <h3>Cloud Security</h3>
+          <p>Harden AWS, Azure and Google Cloud against misconfiguration and abuse.</p>
+          <ul><li>Posture assessments</li><li>Identity &amp; access reviews</li><li>Container &amp; Kubernetes security</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          <h3>Compliance &amp; GRC</h3>
+          <p>Get audit-ready and stay that way with clear, practical guidance.</p>
+          <ul><li>SOC 2, ISO 27001, HIPAA</li><li>PCI DSS &amp; GDPR</li><li>Policy development</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></div>
+          <h3>Security Awareness</h3>
+          <p>Turn your team into your strongest line of defense.</p>
+          <ul><li>Phishing simulations</li><li>Interactive training</li><li>Executive briefings</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="process">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">// Our approach</div>
+        <h2>Four steps to a stronger security posture</h2>
+        <p>A clear, repeatable method that turns findings into lasting protection.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><h3>Assess</h3><p>We map your assets, risks and attack surface to see what an adversary sees.</p></div>
+        <div class="step reveal"><h3>Attack</h3><p>Our experts safely exploit weaknesses to prove real-world impact.</p></div>
+        <div class="step reveal"><h3>Fortify</h3><p>Prioritized remediation, hardening and controls tailored to your business.</p></div>
+        <div class="step reveal"><h3>Monitor</h3><p>Continuous detection and response keep you protected around the clock.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section id="why">
+    <div class="wrap why-grid">
+      <div class="reveal">
+        <div class="eyebrow">// Why FrankenTechnogies</div>
+        <h2>Built from the best parts of security</h2>
+        <p style="color:var(--muted);margin-bottom:28px">Like our namesake, we combine the strongest pieces (offensive skill, defensive rigor and business sense) into one tireless defender.</p>
+        <div class="checks">
+          <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><div><h4>Attacker mindset</h4><p>Our testers think like adversaries, so your defenses are built against real tactics.</p></div></div>
+          <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><div><h4>Plain-English reporting</h4><p>Clear findings for executives, detailed fixes for engineers.</p></div></div>
+          <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><div><h4>Always on</h4><p>Threats don't keep business hours. Neither does our SOC.</p></div></div>
+          <div class="check"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><div><h4>Right-sized for you</h4><p>Flexible plans for startups, SMBs and enterprises alike.</p></div></div>
+        </div>
+      </div>
+      <div class="shield-panel reveal" aria-hidden="true">
+        <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+        <svg class="big" viewBox="0 0 64 64"><use href="#ft-logo"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMERGENCY BAND -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="band reveal">
+        <div>
+          <h2>Under attack right now?</h2>
+          <p>Our incident response team is on standby 24/7. Call us immediately.</p>
+        </div>
+        <!-- Replace with your real emergency number -->
+        <a href="tel:+10000000000" class="btn btn-danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+          Emergency Response Line
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">// Contact</div>
+        <h2>Request your free security assessment</h2>
+        <p>Tell us about your environment and a security specialist will reach out within one business day.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="info reveal">
+          <div class="info-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+            <div><b>Email</b><span><a href="mailto:info@frankentechnogies.com">info@frankentechnogies.com</a></span></div>
+          </div>
+          <div class="info-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-6 8-12a8 8 0 0 0-16 0c0 6 8 12 8 12z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><b>Website</b><span>frankentechnogies.com</span></div>
+          </div>
+          <div class="info-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div><b>Hours</b><span>Sales: Mon–Fri, 9am–6pm<br>SOC &amp; Incident Response: 24/7/365</span></div>
+          </div>
+          <div class="info-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <div><b>Confidential</b><span>Everything you share is handled under strict confidentiality. NDA available on request.</span></div>
+          </div>
+        </div>
+
+        <!--
+          HOW TO RECEIVE SUBMISSIONS:
+          Set the form's action to your form handler, e.g. a Formspree endpoint
+          (https://formspree.io/f/XXXXXXX) or your own server script.
+          If action is left as "#", the page shows a success message and opens
+          the visitor's email app with the details pre-filled as a fallback.
+        -->
+        <form id="contactForm" class="reveal" action="#" method="POST" novalidate>
+          <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="row">
+            <div class="field"><label for="name">Full name *</label><input id="name" name="name" required autocomplete="name"><div class="err">Please enter your name.</div></div>
+            <div class="field"><label for="email">Work email *</label><input id="email" name="email" type="email" required autocomplete="email"><div class="err">Please enter a valid email.</div></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="company">Company</label><input id="company" name="company" autocomplete="organization"></div>
+            <div class="field"><label for="service">Service of interest *</label>
+              <select id="service" name="service" required>
+                <option value="">Select a service</option>
+                <option>Penetration Testing</option>
+                <option>Managed Detection &amp; Response</option>
+                <option>Incident Response</option>
+                <option>Cloud Security</option>
+                <option>Compliance &amp; GRC</option>
+                <option>Security Awareness Training</option>
+                <option>Not sure yet</option>
+              </select><div class="err">Please choose a service.</div></div>
+          </div>
+          <div class="field"><label for="message">How can we help? *</label><textarea id="message" name="message" required></textarea><div class="err">Please tell us a little about your needs.</div></div>
+          <button type="submit" class="btn btn-primary" style="justify-content:center">Send Secure Request</button>
+          <div class="form-msg success" id="formMsg" role="status">Thanks! Your request was received. A FrankenTechnogies specialist will contact you shortly.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#top" class="logo" aria-label="Back to top">
+          <svg viewBox="0 0 64 64" width="40" height="40"><use href="#ft-logo"/></svg>
+          <div class="wordmark">Franken<span>Technogies</span><small>Cyber Defense</small></div>
+        </a>
+        <p>Cybersecurity that never sleeps. Protecting businesses from today's threats and tomorrow's.</p>
+      </div>
+      <div><h5>Services</h5><a href="#services">Penetration Testing</a><a href="#services">MDR / SOC</a><a href="#services">Incident Response</a><a href="#services">Cloud Security</a></div>
+      <div><h5>Company</h5><a href="#why">About</a><a href="#process">Approach</a><a href="#contact">Contact</a></div>
+      <div><h5>Get in touch</h5><a href="mailto:info@frankentechnogies.com">info@frankentechnogies.com</a><a href="#contact">Free Assessment</a></div>
+    </div>
+    <div class="copy">
+      <span>&copy; <span id="year"></span> FrankenTechnogies. All rights reserved.</span>
+      <span class="mono">frankentechnogies.com</span>
+    </div>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="Back to top">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+(function(){
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Mobile menu
+  var menuBtn = document.getElementById('menuBtn'), links = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ links.classList.remove('open'); menuBtn.setAttribute('aria-expanded', false); });
+  });
+
+  // Back to top + active nav link
+  var toTop = document.getElementById('toTop');
+  var sections = ['services','process','why','contact'].map(function(id){return document.getElementById(id);});
+  window.addEventListener('scroll', function(){
+    toTop.classList.toggle('show', window.scrollY > 600);
+    var pos = window.scrollY + 120, current = null;
+    sections.forEach(function(s){ if (s.offsetTop <= pos) current = s.id; });
+    links.querySelectorAll('a:not(.btn)').forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }, {passive:true});
+  toTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+
+  // Reveal on scroll + stat counters
+  function countUp(el){
+    var target = parseFloat(el.dataset.count), dec = parseInt(el.dataset.dec || 0, 10),
+        suffix = el.dataset.suffix || '', start = null, dur = 1400;
+    function step(t){
+      if (!start) start = t;
+      var p = Math.min((t - start) / dur, 1), v = target * (1 - Math.pow(1 - p, 3));
+      el.innerHTML = v.toFixed(dec) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        var c = e.target.querySelector('[data-count]');
+        if (c) countUp(c);
+        io.unobserve(e.target);
+      });
+    }, {threshold:.15});
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+    document.querySelectorAll('[data-count]').forEach(countUp);
+  }
+
+  // Simulated SOC terminal
+  var term = document.getElementById('term');
+  var lines = [
+    ['p','$ ft-scan --perimeter --live'],
+    ['','[*] Initializing FrankenTechnogies threat engine...'],
+    ['ok','[+] 1,284 endpoints online'],
+    ['ok','[+] Firewall policies verified'],
+    ['warn','[!] Suspicious login burst: 203.0.113.47'],
+    ['','[*] Correlating with threat intel...'],
+    ['bad','[x] Credential-stuffing pattern detected'],
+    ['ok','[+] Source IP blocked, MFA enforced'],
+    ['ok','[+] Analyst notified, ticket #FT-4471'],
+    ['warn','[!] Outdated TLS on mail.example.net'],
+    ['ok','[+] Patch scheduled, risk downgraded'],
+    ['ok','[✓] All systems protected']
+  ];
+  var i = 0;
+  function next(){
+    var cur = term.querySelector('.cursor'); if (cur) cur.remove();
+    if (i >= lines.length){
+      setTimeout(function(){ term.innerHTML=''; i=0; next(); }, 4000);
+      return;
+    }
+    var d = document.createElement('div');
+    d.className = lines[i][0]; d.textContent = lines[i][1];
+    term.appendChild(d);
+    var c = document.createElement('span'); c.className='cursor'; term.appendChild(c);
+    i++;
+    setTimeout(next, 450 + Math.random()*550);
+  }
+  next();
+
+  // Contact form validation + submit
+  var form = document.getElementById('contactForm'), msg = document.getElementById('formMsg');
+  function validate(){
+    var ok = true;
+    form.querySelectorAll('[required]').forEach(function(f){
+      var bad = !f.value.trim() || (f.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value));
+      f.closest('.field').classList.toggle('invalid', bad);
+      if (bad) ok = false;
+    });
+    return ok;
+  }
+  form.addEventListener('input', function(e){
+    var f = e.target.closest('.field'); if (f && f.classList.contains('invalid')) validate();
+  });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (form.company_website.value) return;            // bot honeypot
+    if (!validate()) { form.querySelector('.invalid input, .invalid select, .invalid textarea').focus(); return; }
+
+    var action = form.getAttribute('action');
+    var data = new FormData(form);
+    if (action && action !== '#'){
+      fetch(action, {method:'POST', body:data, headers:{'Accept':'application/json'}})
+        .then(function(r){ if(!r.ok) throw 0; done(); })
+        .catch(function(){ msg.textContent='Sorry, something went wrong. Please email info@frankentechnogies.com.'; msg.classList.add('show'); });
+    } else {
+      // Fallback: open the visitor's email client with details pre-filled
+      var body = 'Name: ' + data.get('name') + '\nEmail: ' + data.get('email') +
+                 '\nCompany: ' + data.get('company') + '\nService: ' + data.get('service') +
+                 '\n\n' + data.get('message');
+      window.location.href = 'mailto:info@frankentechnogies.com?subject=' +
+        encodeURIComponent('Security Assessment Request - ' + data.get('service')) +
+        '&body=' + encodeURIComponent(body);
+      done();
+    }
+    function done(){ msg.classList.add('show'); form.reset(); }
+  });
+})();
+</script>
+</body>
+</html>
